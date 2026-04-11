@@ -1,6 +1,8 @@
-﻿public class SubastaAscendente : SubastaStrategy
+﻿using appSubastaTrabajo.Modelos;
+
+public class SubastaAscendente : SubastaStrategy
 {
-    public void RealizarOferta(Subasta subasta, UsuarioDTO usuario, decimal monto)
+    public override void RealizarOferta(Subasta subasta, UsuarioDTO usuario, decimal monto)
     {
         if (monto <= subasta.PrecioActual)
         {
@@ -8,6 +10,13 @@
         }
 
         subasta.PrecioActual = monto;
+
+        subasta.Ofertas.Add(new Oferta
+        {
+            Usuario = usuario,
+            Monto = monto
+        });
+
         subasta.Ganador = usuario;
     }
 }
