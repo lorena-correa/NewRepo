@@ -34,7 +34,6 @@ public class Subasta
         Estrategia.RealizarOferta(this, usuario, monto);
     }
 
-    // 🔥 ESTO ES LO QUE TE FALTABA
     public void CerrarSubasta()
     {
         Activa = false;
