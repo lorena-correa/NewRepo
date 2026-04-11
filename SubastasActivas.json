@@ -1,0 +1,14 @@
+[
+  {
+    "NombreProducto": "Laptop",
+    "PrecioActual": 1000,
+    "TipoSubasta": "Ascendente",
+    "Activa": true
+  },
+  {
+    "NombreProducto": "Manzanas",
+    "PrecioActual": 50,
+    "TipoSubasta": "Descendente",
+    "Activa": true
+  }
+]
