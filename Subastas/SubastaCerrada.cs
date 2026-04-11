@@ -1,25 +1,19 @@
-﻿public class SubastaCerrada : SubastaStrategy
-{
-    private Dictionary<string, decimal> ofertas = new();
+﻿using appSubastaTrabajo.Modelos;
 
-    public void RealizarOferta(Subasta subasta, UsuarioDTO usuario, decimal monto)
+public class SubastaCerrada : SubastaStrategy
+{
+    public override void RealizarOferta(Subasta subasta, UsuarioDTO usuario, decimal monto)
     {
-        if (ofertas.ContainsKey(usuario.IdUsuario))
+        if (!subasta.Activa)
+            throw new Exception("La subasta está cerrada");
+
+        if (subasta.Ofertas.Any(o => o.Usuario.IdUsuario == usuario.IdUsuario))
             throw new Exception("Ya ofertaste");
 
-        ofertas[usuario.IdUsuario] = monto;
-    }
-
-    public void Cerrar(Subasta subasta)
-    {
-        var mejor = ofertas.OrderByDescending(o => o.Value).FirstOrDefault();
-
-        if (!string.IsNullOrEmpty(mejor.Key))
+        subasta.Ofertas.Add(new Oferta
         {
-            subasta.PrecioActual = mejor.Value;
-            subasta.Ganador = new UsuarioDTO { IdUsuario = mejor.Key };
-        }
-
-        subasta.Activa = false;
+            Usuario = usuario,
+            Monto = monto
+        });
     }
 }
