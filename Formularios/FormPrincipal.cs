@@ -22,18 +22,11 @@ namespace appSubastaTrabajo.Formularios
                 InitializeComponent();
 
                 SubastaServicio subastaServicio = new SubastaServicio();
-
                 var datos = subastaServicio.ObtenerSubastas();
 
                 listaSubastas = datos.Select(d => SubastaFactory.Crear(d)).ToList();
 
-                dataGridView1.DataSource = listaSubastas.Select(s => new
-                {
-                    s.NombreProducto,
-                    s.PrecioActual,
-                    Tipo = s.Estrategia.GetType().Name,
-                    Estado = s.Activa ? "Activa" : "Cerrada"
-                }).ToList();
+                CargarGrid();
 
                 usuarioActual = usuario;
 
@@ -54,7 +47,6 @@ namespace appSubastaTrabajo.Formularios
                 MessageBox.Show($"Error al cargar el formulario: {ex.Message}");
             }
         }
-
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -73,6 +65,8 @@ namespace appSubastaTrabajo.Formularios
                 decimal monto = decimal.Parse(textBox1.Text);
 
                 subastaSeleccionada.Ofertar(usuarioActual, monto);
+
+                GuardarSubastas(); 
 
                 MessageBox.Show("Oferta realizada");
 
@@ -93,6 +87,8 @@ namespace appSubastaTrabajo.Formularios
 
                 subastaSeleccionada.Ofertar(usuarioActual, subastaSeleccionada.PrecioActual);
 
+                GuardarSubastas(); 
+
                 MessageBox.Show("Precio aceptado");
 
                 RecargarGrid();
@@ -103,9 +99,8 @@ namespace appSubastaTrabajo.Formularios
             }
         }
 
-        private void RecargarGrid()
+        private void CargarGrid()
         {
-            dataGridView1.DataSource = null;
             dataGridView1.DataSource = listaSubastas.Select(s => new
             {
                 s.NombreProducto,
@@ -113,6 +108,32 @@ namespace appSubastaTrabajo.Formularios
                 Tipo = s.Estrategia.GetType().Name,
                 Estado = s.Activa ? "Activa" : "Cerrada"
             }).ToList();
+        }
+
+        private void RecargarGrid()
+        {
+            dataGridView1.DataSource = null;
+            CargarGrid();
+        }
+
+        private void GuardarSubastas()
+        {
+            SubastaServicio servicio = new SubastaServicio();
+
+            string ruta = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Subastas.json");
+
+            File.WriteAllText(ruta, "[]");
+
+            foreach (var s in listaSubastas)
+            {
+                servicio.GuardarSubasta(new SubastaDTO
+                {
+                    NombreProducto = s.NombreProducto,
+                    PrecioActual = s.PrecioActual,
+                    TipoSubasta = s.Estrategia.GetType().Name.Replace("Subasta", ""),
+                    Activa = s.Activa
+                });
+            }
         }
     }
 }
