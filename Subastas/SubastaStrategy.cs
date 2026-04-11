@@ -1,4 +1,3 @@
-﻿public interface SubastaStrategy
-{
-    void RealizarOferta(SubastaStrategy subasta, UsuarioDTO usuario, decimal monto);
+﻿public interface SubastaStrategy{
+    void RealizarOferta(Subasta subasta, UsuarioDTO usuario, decimal monto);
 }

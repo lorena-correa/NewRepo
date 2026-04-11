@@ -2,9 +2,9 @@
 {
     public string idUsuario { get; set; }
 
-    public Usuario (string idUsuario)
+    public Usuario(string idUsuario)
     {
-        idUsuario = idUsuario;
+        this.idUsuario = idUsuario;
     }
 
     public abstract void RealizarOferta(decimal monto);

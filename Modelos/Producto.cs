@@ -1,0 +1,11 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+public abstract class Producto
+{
+    public string Nombre { get; set; }
+    public decimal PrecioInicial { get; set; }
+    public string Descripcion { get; set; }
+
+    public abstract decimal CalcularPrecioFinal();
+}
